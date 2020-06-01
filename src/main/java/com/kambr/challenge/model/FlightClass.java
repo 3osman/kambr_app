@@ -1,5 +1,6 @@
 package com.kambr.challenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kambr.challenge.model.enums.ClassType;
 
 import javax.persistence.*;
@@ -16,8 +17,8 @@ public class FlightClass {
     private int seatsSold;
     @Column
     private double revenue;
-
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     Cabin cabin;
 
     @Version

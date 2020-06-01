@@ -1,5 +1,6 @@
 package com.kambr.challenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kambr.challenge.model.enums.CabinType;
 
 import javax.persistence.*;
@@ -12,8 +13,10 @@ public class Cabin {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private Flight flight;
+    @JsonIgnore
     @OneToMany
     @JoinColumn(name = "cabin_id")
     private List<FlightClass> classes;

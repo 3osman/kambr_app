@@ -26,6 +26,11 @@ public class FlightService {
         flightRepo.save(flightMeta);
         return a;
     }
+
+    public Flight save(Flight f){
+        flightCreatorRepo.save(f);
+        return f;
+    }
     @Transactional
     public Flight findById(String Id) {
         return flightCreatorRepo.findById(Id);
