@@ -1,5 +1,7 @@
 package com.kambr.challenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kambr.challenge.dto.FlightResponse;
 import com.kambr.challenge.model.enums.AircraftType;
 import com.kambr.challenge.util.FlightUtils;
 
@@ -32,7 +34,8 @@ public class Flight {
 	@Column(name = "aircraft_type")
 	private AircraftType aircraft;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@JsonIgnore
 	@JoinColumn(name = "flight_id")
 	private List<Cabin> cabins;
 

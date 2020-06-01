@@ -27,6 +27,9 @@ public class FlightClass {
     @Column(name = "class_type")
     private ClassType classType;
 
+    public FlightClass() {
+    }
+
     public FlightClass(String cabinType, double price, int seatsSold, double revenue, Cabin cabin) {
         this.classType = ClassType.valueOf(cabinType);
         this.price = price;

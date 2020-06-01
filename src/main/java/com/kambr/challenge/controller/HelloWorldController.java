@@ -1,5 +1,6 @@
 package com.kambr.challenge.controller;
 
+import com.kambr.challenge.dto.FlightResponse;
 import com.kambr.challenge.model.*;
 import com.kambr.challenge.model.enums.CabinType;
 import com.kambr.challenge.service.CabinService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -53,6 +55,7 @@ public class HelloWorldController {
 		Cabin c = cabinService.createCabin(f, CabinType.C);
 		Cabin d = cabinService.createCabin(f, CabinType.A);
 		Cabin r = cabinService.createCabin(f, CabinType.B);
+		FlightClass fc = new FlightClass("A",2,2,12, r);
 		flightCreatorService.save(f);
 		Example<FlightMetadata> flightExample = Example.of(flight);
 		//ArrayList<FlightMetadata> x = (ArrayList)(flightMetaService.findBy(flight. PageRequest.of(0,1))).getContent();
@@ -64,9 +67,9 @@ public class HelloWorldController {
 
 	@GetMapping("/flights")
 	@ResponseBody
-	public Iterable<Flight> findFlight(FlightSearchRequest parameters, @RequestParam(name="page", required=false, defaultValue="0") String page, @RequestParam(name="size", required=false, defaultValue="10") String size) {
+	public <T> List<T> findFlight(FlightSearchRequest parameters, @RequestParam(name="includeData", required=false, defaultValue="false") String includeData, @RequestParam(name="page", required=false, defaultValue="0") String page, @RequestParam(name="size", required=false, defaultValue="10") String size) {
 		QueryBuilder q = parameters.toQuery();
-		return flightMetaService.findByQuery(q, PageRequest.of(Integer.parseInt(page), Integer.parseInt(size)));
+		return flightMetaService.findByQuery(q, PageRequest.of(Integer.parseInt(page), Integer.parseInt(size)), Boolean.parseBoolean(includeData));
 	}
 
 //	//update one flight

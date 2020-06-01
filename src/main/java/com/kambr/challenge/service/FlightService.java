@@ -33,7 +33,7 @@ public class FlightService {
         return f;
     }
     @Transactional
-    public Flight findById(String Id) {
-        return flightCreatorRepo.findById(Id);
+    public Flight findById(String id) {
+        return flightCreatorRepo.findById(id);
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kambr.challenge.model.enums.CabinType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Cabin {
     @ManyToOne(fetch = FetchType.LAZY)
     private Flight flight;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     @JoinColumn(name = "cabin_id")
     private List<FlightClass> classes;
     @Column(name = "cabin_type")
@@ -29,6 +30,7 @@ public class Cabin {
     public Cabin(Flight flight, CabinType cabinName) {
         this.flight = flight;
         this.cabinType = cabinName;
+        this.classes = new ArrayList<FlightClass>();
         this.flight.addCabin(this);
     }
 
@@ -56,7 +58,7 @@ public class Cabin {
         this.classes = classes;
     }
 
-    public void addClass(FlightClass c){
+    public void addClass(FlightClass c) {
         classes.add(c);
     }
 }

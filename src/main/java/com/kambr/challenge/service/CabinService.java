@@ -18,7 +18,7 @@ public class CabinService {
     private CabinRepository cabinRepo;
     @Transactional
     public Page<Cabin> findByFlight(Flight flight, PageRequest pageRequest){
-        return cabinRepo.findAllByFlight(flight, pageRequest);
+        return cabinRepo.findAllByFlightId(flight.getId(), pageRequest);
     }
 
     @Transactional

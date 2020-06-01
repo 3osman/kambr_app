@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CabinRepository extends JpaRepository<Cabin, Long> {
-    Page<Cabin> findAllByFlight(Flight flight, Pageable pageable);
+    Page<Cabin> findAllByFlightId(String flight, Pageable pageable);
 }
