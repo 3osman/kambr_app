@@ -1,8 +1,8 @@
 package com.kambr.challenge.model;
 
-import javax.persistence.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import javax.persistence.Id;
 import java.util.Date;
 
 @Document(indexName = "kambr")

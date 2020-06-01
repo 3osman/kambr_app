@@ -1,6 +1,5 @@
 package com.kambr.challenge.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kambr.challenge.model.enums.AircraftType;
 import com.kambr.challenge.util.FlightUtils;
 
@@ -32,7 +31,7 @@ public class Flight {
 	private long arrivalTime;
 	@Column(name = "aircraft_type")
 	private AircraftType aircraft;
-	@JsonIgnore
+
 	@OneToMany
 	@JoinColumn(name = "flight_id")
 	private List<Cabin> cabins;

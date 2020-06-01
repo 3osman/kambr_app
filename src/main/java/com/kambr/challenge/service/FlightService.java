@@ -6,6 +6,7 @@ import com.kambr.challenge.repo.FlightMetadataRepository;
 import com.kambr.challenge.repo.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.util.Date;

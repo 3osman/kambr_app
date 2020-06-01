@@ -16,7 +16,7 @@ public class Cabin {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Flight flight;
-    @JsonIgnore
+
     @OneToMany
     @JoinColumn(name = "cabin_id")
     private List<FlightClass> classes;

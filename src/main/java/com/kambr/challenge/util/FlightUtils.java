@@ -1,7 +1,6 @@
 package com.kambr.challenge.util;
 
 import java.util.Date;
-import java.util.Objects;
 
 public class FlightUtils {
 
