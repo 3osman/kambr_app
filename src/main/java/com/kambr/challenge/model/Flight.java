@@ -1,7 +1,6 @@
 package com.kambr.challenge.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.kambr.challenge.dto.FlightResponse;
 import com.kambr.challenge.model.enums.AircraftType;
 import com.kambr.challenge.util.FlightUtils;
 

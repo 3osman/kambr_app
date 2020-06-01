@@ -1,4 +1,4 @@
-package com.kambr.challenge;
+package com.kambr.challenge.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +20,4 @@ public class EsConfig extends AbstractElasticsearchConfiguration {
 
         return RestClients.create(clientConfiguration).rest();
     }
-
-
 }

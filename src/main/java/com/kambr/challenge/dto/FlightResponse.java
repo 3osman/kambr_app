@@ -1,9 +1,8 @@
 package com.kambr.challenge.dto;
 
-import com.kambr.challenge.model.Cabin;
 import com.kambr.challenge.model.enums.AircraftType;
+
 import java.util.Date;
-import java.util.List;
 public interface FlightResponse {
 
     public String getId();

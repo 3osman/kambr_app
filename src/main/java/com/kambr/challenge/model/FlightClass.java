@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class FlightClass {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column
     private double price;
@@ -39,12 +39,20 @@ public class FlightClass {
         this.cabin.addClass(this);
     }
 
-    public ClassType getCabinType() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ClassType getClassType() {
         return classType;
     }
 
-    public void setCabinType(ClassType cabinType) {
-        this.classType = cabinType;
+    public void setClassType(ClassType classType) {
+        this.classType = classType;
     }
 
     public double getPrice() {

@@ -3,24 +3,30 @@ package com.kambr.challenge.controller;
 import com.kambr.challenge.dto.FlightResponse;
 import com.kambr.challenge.model.*;
 import com.kambr.challenge.model.enums.CabinType;
+import com.kambr.challenge.model.enums.ClassType;
 import com.kambr.challenge.service.CabinService;
+import com.kambr.challenge.service.FlightClassService;
 import com.kambr.challenge.service.FlightMetaDataService;
 import com.kambr.challenge.service.FlightService;
+import io.swagger.annotations.ApiOperation;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
-public class HelloWorldController {
+public class ApplicationController {
 
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
@@ -33,56 +39,65 @@ public class HelloWorldController {
 	@Autowired
 	CabinService cabinService;
 
+	@Autowired
+	FlightClassService classService;
+
 	@GetMapping("/hello-world")
 	@ResponseBody
-	public Greeting startUp() {
-
+	public String startUp() {
+		Date dd = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
 		Flight f = flightCreatorService.createFlight(
 				"test_origin",
 				"test_destination",
-				new Date(),
+				dd,
 				"test_flight_number",
-				new Date(),
+				dd,
 				12,
 				12,
 				"ONE"
 		);
 		FlightMetadata flight = new FlightMetadata();
 		flight.setOrigin("test_origin");
-
-
-		//
 		Cabin c = cabinService.createCabin(f, CabinType.C);
 		Cabin d = cabinService.createCabin(f, CabinType.A);
 		Cabin r = cabinService.createCabin(f, CabinType.B);
 		FlightClass fc = new FlightClass("A",2,2,12, r);
 		flightCreatorService.save(f);
 		Example<FlightMetadata> flightExample = Example.of(flight);
-		//ArrayList<FlightMetadata> x = (ArrayList)(flightMetaService.findBy(flight. PageRequest.of(0,1))).getContent();
 		FlightMetadata x = flightMetaService.findOne(f.getId()).get();
-		//Iterator iter = x.iterator();
 		Flight fReturned = flightCreatorService.findById(x.getId());
-		return new Greeting(counter.incrementAndGet(), String.format(template, fReturned.getCabins().size()));
+		return "";
 	}
 
 	@GetMapping("/flights")
 	@ResponseBody
-	public <T> List<T> findFlight(FlightSearchRequest parameters, @RequestParam(name="includeData", required=false, defaultValue="false") String includeData, @RequestParam(name="page", required=false, defaultValue="0") String page, @RequestParam(name="size", required=false, defaultValue="10") String size) {
+	@ApiOperation(value="Searches for flights", produces="application/json", response=FlightResponse.class,responseContainer = "List")
+	public List<Object> findFlight(FlightSearchRequest parameters, @RequestParam(name="includeData", required=false, defaultValue="false") String includeData, @RequestParam(name="page", required=false, defaultValue="0") String page, @RequestParam(name="size", required=false, defaultValue="10") String size) {
+		Map<String, Object> json = new HashMap();
 		QueryBuilder q = parameters.toQuery();
 		return flightMetaService.findByQuery(q, PageRequest.of(Integer.parseInt(page), Integer.parseInt(size)), Boolean.parseBoolean(includeData));
 	}
 
-//	//update one flight
-//	//params: Flight id, Flight class
-//	@PutMapping("/update")
-//	@ResponseBody
-//	public Flight sayHello(@RequestParam(name="name", required=false, defaultValue="Stranger") String name) {
-//		return new Flight(counter.incrementAndGet(), String.format(template, name));
-//	}
-//
+	//update one flight
+	//params: Flight id, Flight cabin, Flight class
+	@PutMapping("/update")
+	@ResponseBody
+	@ApiOperation(value="Updates a class for a flight", produces="application/json", response=FlightClass.class)
+	public ResponseEntity<Object> update(@RequestParam(name="flightId", required=true) String flightId, @RequestParam(name="cabin", required=true) String cabin, @RequestParam(name="class", required=true) String flightClass, @RequestParam(name="newPrice", required=true) double newPrice) throws JSONException {
+		FlightClass output = classService.updateFlightClass(flightId, cabin, ClassType.valueOf(flightClass), newPrice);
+		Map<String, Object> json = new HashMap();
+		if (output == null) {
+			json.put("result", "update unsuccessful");
+			json.put("reason", "combination of flight and cabin and flight class does not exist");
+			return new ResponseEntity<Object>(json, HttpStatus.BAD_REQUEST);
+		} else {
+			return new ResponseEntity<Object>(output, HttpStatus.OK);
+		}
+	}
+
 //	// update multiple  flight
-//	// params: Flight list, Flight class
-//	@PostMapping("/batch-update")
+//	// params: Flight object list, each with flight cabin, class, new price
+//	@PostMapping("/batchUpdate")
 //	@ResponseBody
 //	public Flight sayHello(@RequestParam(name="name", required=false, defaultValue="Stranger") String name) {
 //		return new Flight(counter.incrementAndGet(), String.format(template, name));

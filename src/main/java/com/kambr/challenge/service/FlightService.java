@@ -27,13 +27,13 @@ public class FlightService {
         flightRepo.save(flightMeta);
         return a;
     }
-
+    @Transactional
     public Flight save(Flight f){
         flightCreatorRepo.save(f);
         return f;
     }
     @Transactional
     public Flight findById(String id) {
-        return flightCreatorRepo.findById(id);
+        return flightCreatorRepo.findById(id).orElse(null);
     }
 }
