@@ -9,7 +9,7 @@ public class FlightUtils {
     }
 
     public String getFlightId(String origin, String destination, Date departureDate, String flightNumber){
-        return Objects.hash(new String[]{origin, destination, departureDate.toString(), flightNumber})+""; //simple hashing to id
+        return origin + ":" + destination + ":" + departureDate.getTime() + ":" + flightNumber;
     }
 
 }

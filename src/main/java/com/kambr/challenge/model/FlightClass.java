@@ -32,6 +32,7 @@ public class FlightClass {
         this.seatsSold = seatsSold;
         this.revenue = revenue;
         this.cabin = cabin;
+        this.cabin.addClass(this);
     }
 
     public ClassType getCabinType() {
