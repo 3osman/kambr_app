@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="postgres" schema="public" type="PostgreSQL - 12.3">
+   <sequences>
+      <sequence increment="1" name="hibernate_sequence" startValue="1"/>
+   </sequences>
+   <tables>
+      <table name="cabin" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="int8" typeCode="-5">
+            <child column="cabin_id" foreignKey="fkcpej6w1mbq7d66ddhdx3sqh47" implied="false" onDeleteCascade="false" schema="public" table="flight_class"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="cabin_type" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="flight_id" nullable="true" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="id" foreignKey="fk4nr3bn6ajpka2xiyaexkdsjku" implied="false" onDeleteCascade="false" schema="public" table="flight"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="cabin_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="flight" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="flight_id" foreignKey="fk4nr3bn6ajpka2xiyaexkdsjku" implied="false" onDeleteCascade="false" schema="public" table="cabin"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="aircraft_type" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="arrival_date" nullable="true" remarks="" size="13" type="date" typeCode="91"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="arrival_time" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="departure_date" nullable="true" remarks="" size="13" type="date" typeCode="91"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="departure_time" nullable="true" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="destination" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="flight_number" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="origin" nullable="true" remarks="" size="255" type="varchar" typeCode="12"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="flight_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="flight_class" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="class_type" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="2" name="price" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="3" name="revenue" nullable="true" remarks="" size="17" type="float8" typeCode="8"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="seats_sold" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="version" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="cabin_id" nullable="true" remarks="" size="19" type="int8" typeCode="-5">
+            <parent column="id" foreignKey="fkcpej6w1mbq7d66ddhdx3sqh47" implied="false" onDeleteCascade="false" schema="public" table="cabin"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="flight_class_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+   </tables>
+</database>

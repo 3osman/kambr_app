@@ -40,9 +40,9 @@ public class ApplicationController {
 	@Autowired
 	FlightClassService classService;
 
-//	@GetMapping("/hello-world")
-//	@ResponseBody
-//	public String startUp() {
+	@GetMapping("/hello-world")
+	@ResponseBody
+	public String startUp() {
 //		Date dd = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
 //		Flight f = flightCreatorService.createFlight(
 //				"test_origin",
@@ -83,8 +83,8 @@ public class ApplicationController {
 //		Example<FlightMetadata> flightExample = Example.of(flight);
 //		FlightMetadata x = flightMetaService.findOne(f.getId()).get();
 //		Flight fReturned = flightCreatorService.findById(x.getId());
-//		return "";
-//	}
+		return "";
+	}
 
 	@GetMapping("/flights")
 	@ResponseBody

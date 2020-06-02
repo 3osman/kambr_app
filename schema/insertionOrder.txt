@@ -1,0 +1,3 @@
+flight
+cabin
+flight_class
