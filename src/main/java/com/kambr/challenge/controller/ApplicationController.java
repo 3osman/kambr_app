@@ -40,55 +40,55 @@ public class ApplicationController {
 	@Autowired
 	FlightClassService classService;
 
-	@GetMapping("/hello-world")
-	@ResponseBody
-	public String startUp() {
-		Date dd = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
-		Flight f = flightCreatorService.createFlight(
-				"test_origin",
-				"test_destination",
-				new Date(),
-				"test_flight_number",
-				dd,
-				12,
-				12,
-				"ONE"
-		);
-
-
-		FlightMetadata flight = new FlightMetadata();
-		flight.setOrigin("test_origin");
-		Cabin c = cabinService.createCabin(f, CabinType.C);
-		Cabin d = cabinService.createCabin(f, CabinType.A);
-		Cabin r = cabinService.createCabin(f, CabinType.B);
-		FlightClass fc = new FlightClass("A",2,2,12, r);
-
-		flightCreatorService.save(f);
-
-		Flight f2 = flightCreatorService.createFlight(
-				"test_origin_2",
-				"test_destination_2",
-				dd,
-				"test_flight_number_2",
-				dd,
-				12,
-				12,
-				"ONE"
-		);
-		Cabin cc = cabinService.createCabin(f2, CabinType.C);
-		Cabin d2 = cabinService.createCabin(f2, CabinType.A);
-		Cabin rr = cabinService.createCabin(f2, CabinType.B);
-		FlightClass fc2 = new FlightClass("A",10,2,12, rr);
-		flightCreatorService.save(f2);
-		Example<FlightMetadata> flightExample = Example.of(flight);
-		FlightMetadata x = flightMetaService.findOne(f.getId()).get();
-		Flight fReturned = flightCreatorService.findById(x.getId());
-		return "";
-	}
+//	@GetMapping("/hello-world")
+//	@ResponseBody
+//	public String startUp() {
+//		Date dd = new GregorianCalendar(2014, Calendar.FEBRUARY, 11).getTime();
+//		Flight f = flightCreatorService.createFlight(
+//				"test_origin",
+//				"test_destination",
+//				new Date(),
+//				"test_flight_number",
+//				dd,
+//				12,
+//				12,
+//				"ONE"
+//		);
+//
+//
+//		FlightMetadata flight = new FlightMetadata();
+//		flight.setOrigin("test_origin");
+//		Cabin c = cabinService.createCabin(f, CabinType.C);
+//		Cabin d = cabinService.createCabin(f, CabinType.A);
+//		Cabin r = cabinService.createCabin(f, CabinType.B);
+//		FlightClass fc = new FlightClass("A",2,2,12, r);
+//
+//		flightCreatorService.save(f);
+//
+//		Flight f2 = flightCreatorService.createFlight(
+//				"test_origin_2",
+//				"test_destination_2",
+//				dd,
+//				"test_flight_number_2",
+//				dd,
+//				12,
+//				12,
+//				"ONE"
+//		);
+//		Cabin cc = cabinService.createCabin(f2, CabinType.C);
+//		Cabin d2 = cabinService.createCabin(f2, CabinType.A);
+//		Cabin rr = cabinService.createCabin(f2, CabinType.B);
+//		FlightClass fc2 = new FlightClass("A",10,2,12, rr);
+//		flightCreatorService.save(f2);
+//		Example<FlightMetadata> flightExample = Example.of(flight);
+//		FlightMetadata x = flightMetaService.findOne(f.getId()).get();
+//		Flight fReturned = flightCreatorService.findById(x.getId());
+//		return "";
+//	}
 
 	@GetMapping("/flights")
 	@ResponseBody
-	@ApiOperation(value="Searches for flights", produces="application/json", response=FlightResponse.class,responseContainer = "List")
+	@ApiOperation(value="Searches for flights", produces="application/json", response=FlightResponse.class, responseContainer = "List")
 	public List<Object> findFlight(FlightSearchRequest parameters, @RequestParam(name="includeData", required=false, defaultValue="false") String includeData, @RequestParam(name="page", required=false, defaultValue="0") String page, @RequestParam(name="size", required=false, defaultValue="10") String size) {
 		Map<String, Object> json = new HashMap();
 		QueryBuilder q = parameters.toQuery();
@@ -116,7 +116,7 @@ public class ApplicationController {
 	// params: Flight ids list, cabin, class, new price
 	@PostMapping("/batchUpdate")
 	@ResponseBody
-	@ApiOperation(value="Updates a class for list of flights", produces="application/json", responseContainer = "List", response=String.class)
+	@ApiOperation(value="Updates a class for list of flights", produces="application/json", responseContainer = "List", response=FlightClass.class)
 	public ResponseEntity<Object> batchUpdate(@RequestParam(name="flightIds", required=true) List<String> flightIds, @RequestParam(name="cabin", required=true) String cabin, @RequestParam(name="class", required=true) String flightClass, @RequestParam(name="newPrice", required=true) double newPrice) {
  		List<FlightClass> updated = classService.updateFlightClass(flightIds, cabin, ClassType.valueOf(flightClass), newPrice);
 		Map<String, Object> json = new HashMap();
