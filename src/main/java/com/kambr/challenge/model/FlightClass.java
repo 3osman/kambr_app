@@ -30,8 +30,8 @@ public class FlightClass {
     public FlightClass() {
     }
 
-    public FlightClass(String cabinType, double price, int seatsSold, double revenue, Cabin cabin) {
-        this.classType = ClassType.valueOf(cabinType);
+    public FlightClass(String classType, double price, int seatsSold, double revenue, Cabin cabin) {
+        this.classType = ClassType.valueOf(classType);
         this.price = price;
         this.seatsSold = seatsSold;
         this.revenue = revenue;

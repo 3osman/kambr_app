@@ -12,8 +12,7 @@ import java.util.Optional;
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
     Optional<Flight> findById(String id);
+    Optional <List<Flight>> findFlightsByIdIn(List<String> ids);
     List<FlightResponse> findByIdIn(List<String> ids);
     List<FlightResponseWithData> findWithDataByIdIn(List<String> ids);
-//    @Query("SELECT p FROM Flight p FETCH ALL PROPERTIES WHERE p.id IN (:ids)")
-//    List<Flight> findByIdAndFetchCabinsAndClassesEagerly(@Param("ids") List<String> ids);
 }

@@ -13,7 +13,7 @@ public class Cabin {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+    private Long id;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Flight flight;
@@ -32,6 +32,14 @@ public class Cabin {
         this.cabinType = cabinName;
         this.classes = new ArrayList<FlightClass>();
         this.flight.addCabin(this);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Flight getFlight() {

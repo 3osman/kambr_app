@@ -17,12 +17,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -49,20 +47,39 @@ public class ApplicationController {
 		Flight f = flightCreatorService.createFlight(
 				"test_origin",
 				"test_destination",
-				dd,
+				new Date(),
 				"test_flight_number",
 				dd,
 				12,
 				12,
 				"ONE"
 		);
+
+
 		FlightMetadata flight = new FlightMetadata();
 		flight.setOrigin("test_origin");
 		Cabin c = cabinService.createCabin(f, CabinType.C);
 		Cabin d = cabinService.createCabin(f, CabinType.A);
 		Cabin r = cabinService.createCabin(f, CabinType.B);
 		FlightClass fc = new FlightClass("A",2,2,12, r);
+
 		flightCreatorService.save(f);
+
+		Flight f2 = flightCreatorService.createFlight(
+				"test_origin_2",
+				"test_destination_2",
+				dd,
+				"test_flight_number_2",
+				dd,
+				12,
+				12,
+				"ONE"
+		);
+		Cabin cc = cabinService.createCabin(f2, CabinType.C);
+		Cabin d2 = cabinService.createCabin(f2, CabinType.A);
+		Cabin rr = cabinService.createCabin(f2, CabinType.B);
+		FlightClass fc2 = new FlightClass("A",10,2,12, rr);
+		flightCreatorService.save(f2);
 		Example<FlightMetadata> flightExample = Example.of(flight);
 		FlightMetadata x = flightMetaService.findOne(f.getId()).get();
 		Flight fReturned = flightCreatorService.findById(x.getId());
@@ -95,12 +112,21 @@ public class ApplicationController {
 		}
 	}
 
-//	// update multiple  flight
-//	// params: Flight object list, each with flight cabin, class, new price
-//	@PostMapping("/batchUpdate")
-//	@ResponseBody
-//	public Flight sayHello(@RequestParam(name="name", required=false, defaultValue="Stranger") String name) {
-//		return new Flight(counter.incrementAndGet(), String.format(template, name));
-//	}
+	// update multiple  flight
+	// params: Flight ids list, cabin, class, new price
+	@PostMapping("/batchUpdate")
+	@ResponseBody
+	@ApiOperation(value="Updates a class for list of flights", produces="application/json", responseContainer = "List", response=String.class)
+	public ResponseEntity<Object> batchUpdate(@RequestParam(name="flightIds", required=true) List<String> flightIds, @RequestParam(name="cabin", required=true) String cabin, @RequestParam(name="class", required=true) String flightClass, @RequestParam(name="newPrice", required=true) double newPrice) {
+ 		List<FlightClass> updated = classService.updateFlightClass(flightIds, cabin, ClassType.valueOf(flightClass), newPrice);
+		Map<String, Object> json = new HashMap();
+		if (updated.size() == 0) {
+			json.put("result", "update unsuccessful");
+			json.put("reason", "combination of flights and cabin and flight class does not exist");
+			return new ResponseEntity<Object>(json, HttpStatus.BAD_REQUEST);
+		} else {
+			return new ResponseEntity<Object>(updated, HttpStatus.OK);
+		}
+	}
 
 }
