@@ -33,13 +33,10 @@ The problem consists of 3 parts: an API endpoint to find flights, update flight 
 
 **Classes**
 
-Flight _(has_many cabins)_
-
-
-
-1. Cabin _(has_one flight and has_many flight classes)_
-2. Flight Class _(has_one cabin)_
-3. Flight metadata
+1. Flight _(has_many cabins)_
+2. Cabin _(has_one flight and has_many flight classes)_
+3. Flight Class _(has_one cabin)_
+4. Flight metadata
 
 **Database**
 
@@ -47,7 +44,7 @@ Choice for the database was obviously relational, since we will be most probably
 
 
 
-![alt_text](images/image1.png "models")
+![alt_text](image1.png "models")
 
 
 **Repositories**
