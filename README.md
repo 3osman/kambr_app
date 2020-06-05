@@ -47,7 +47,7 @@ Choice for the database was obviously relational, since we will be most probably
 
 
 
-![alt_text](images/image1.png "image_tooltip")
+![alt_text](images/image1.png "models")
 
 
 **Repositories**
@@ -123,82 +123,3 @@ Integration tests tests all database and transaction functions through repositor
 3. Simple Postgresql and ElasticServer queries logging is enabled through the configuration. This allows seeing the exact queries run. You can disable in `application.properties`
 4. A full database schema analysis is available through `schema/index.html`
 
-
-
-
-# Second Part
-
-
-### **Requirements**
-
-
-
-*   Add the ability to import flight data into the system by sending a file blob with a varying format.
-*   Raw file size can be between megabytes to gigabytes/day
-
-
-### **Estimation**
-
-
-
-1. Assume we have 20 entities
-2. Assuming file size ranges between 2 megabytes and 5 gigabytes
-3. Dataflow per day can be in the range of 20 * 2 megabytes till 20 * 2 gigabytes / day
-4. Estimated best case scenario flow/day 40 megabytes
-5. Estimated worst case scenario flow/day 40 gigabytes
-6. Current row size is 168 bytes
-7. Estimation number of entries/day will hugely depend on the file format and the size on disk it takes
-
-
-### **API**
-
-One endpoint will be defined, upload(File file). We will limit the size to 2GB. This is the exposed endpoint to the applications server. Our internal web server accepting this request will divide it into two calls: createMetadata, and then uploadFile. This is for handling fault tolerance, as the server can keep retrying for the same file after metadata is sent. This will be discussed in detail in the diagram.
-
-
-
-1. uploadFile(file)
-2. createMetaData(fileMetaData)
-3. uploadFile(file)
-
-
-### **Data Model**
-
-As this is an extension of our system, the file will be parsed and persisted into disk storage temporarily and then streamed in-memory for parsing into Flight object and then persisted. A pointer to the current end line will be kept and the next fetch from the file will begin from it. These calls can be done in parallel.
-
-
-### **High-level Design**
-
-
-
-
-![alt_text](images/image2.png "image_tooltip")
-
-
-
-### **Detailed Design**
-
-**FileServer**
-
-The file server accepts the metadata, then accepts the file from the web server. The file server then persists the file into storage temporarily for streaming it to the parsing service. This rescues files from failing in case the parsing service fails. The file is removed from storage once it is fully parsed. A pointed to current chunk end is kept as well. The file server streams chunks to the parsing service.
-
-**ParsingService**
-
-The parsing service receives a file chunk. The parsing service has one logical responsibility: parse the file chunk into a standardized JSON/XML format and make sure the file format is supported. The service then forwards it to a message queue for the persisting service to handle. To allow adaptability for multiple file formats, the file type/requested parser is sent in the metadata from the web server to the parsing service. The parsing service has a thin adapter engine that has a factory method to use the correct parser interface based on the provided type. The service throws an error of “type not supported” if the parser is not supported.
-
-**Persisting Service**
-
-The persisting service receives JSON/XML structure of flights, and inserts them into a database. The data model lives in this level, and the data is persisted in both Metadata storage and the full data storage. The data is first committed to the postgresql DB and then propagated to the Elasticsearch server. The service is responsible to make sure the data is reflected. Since the data size is not big or dynamic in general, normal hashing on flight ID could be used for sharding.
-
-
-![alt_text](images/image3.png "image_tooltip")
-
-
-
-### **Additional Considerations**
-
-
-
-*   The data is not extremely dynamic, and the size is also limited. The DB is not a bottleneck perse, and we can as well remove the old and stale data and store it on a less expensive form of storage with low access abilities.
-*   We persist the files on disk storage and load it chunk by chunk to memory through the file server. This protects data from being lost, and allows for retrying in case of failure.
-*   Parsing service allows extensibility by providing a layer transparent to the client that parses based on file type. This layer is extensible and it makes it easy to detect unsupported data types. \
- \
